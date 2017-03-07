@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Test Page</title>
+<script src="lib/keypress-2.1.4.min.js"></script>
+<style>
+body {
+    margin: 0px;
+    padding: 0px;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+}
+
+#pent {
+    position: relative;
+    left: 40%;
+    width: 20%;
+    height: 100%;
+    transform: matrix3d(
+        1,0,0,0,
+        0,1,0,-0.0025,
+        0,0,1,0,
+        0,0,0,1
+    );
+}
+
+.fret {
+    width: 100%;
+    position: absolute;
+}
+
+#topBlur {
+    width: 100%;
+    top: -10%;
+    position: absolute;
+    height: 30%;
+    z-index: 2;
+    background-image: -webkit-gradient(
+        linear, left top, left bottom,
+        from(rgba(0,0,0,1)),
+        to(rgba(0,0,0,0))
+    );
+}
+
+#topBlock {
+    width: 100%;
+    top: -30%;
+    position: absolute;
+    height: 20%;
+    z-index: 2;
+    background-color: black;
+}
+
+.fretButton {
+    width: 17%;
+    top: 72.5%;
+    position: absolute;
+    z-index: 2;
+}
+
+</style>
+</head>
+
+<body>
+<script>
+class Frett {
+    constructor(container, imageFile) {
+        this.spawned = false;
+
+        let img = document.createElement('img');
+        img.src = imageFile;
+        img.className += "fret";
+
+        this.start = container.clientHeight;
+        this.offset = this.start;
+        img.style.top = this.offset + "px";
+
+        this.elm = img;
+        container.appendChild(this.elm);
+    }
+
+    animate(callback) {
+        let height = this.elm.clientHeight;
+
+        if (this.offset < 0-height) {
+            this.destroy();
+            return;
+        }
+
+        if ((!this.spawned) && this.offset < this.start-(height*0.8)) {
+            this.spawned = true;
+            callback();
+        }
+
+        this.offset -= 5;
+        this.elm.style.top = this.offset + "px";
+        window.requestAnimationFrame(()=>{this.animate(callback)});
+    }
+
+    destroy() {
+        this.elm.parentNode.removeChild(this.elm);
+        delete this.elm;
+    }
+}
+
+class FretButtons {
+    constructor(container, config) {
+        this.config = config;
+
+        let offset = container.clientWidth * 0.085;
+        let pos = offset;
+        this.elms = [];
+
+        for (let i=0; i<5; i++) {
+            let img = document.createElement('img');
+            img.src = config.releasedPrefix+ i +config.postfix;
+            img.className += "fretButton";
+            img.style.left = pos + "px";
+            pos += (offset*1.94);
+
+            container.appendChild(img);
+            this.elms.push(img)
+        }
+    }
+
+    changeState(button, state) {
+        let prefix = "";
+
+        if (state == "pressed") {
+            prefix = this.config.pressedPrefix;
+        } else if (state == "plucked") {
+            prefix = this.config.pluckedPrefix;
+        } else if (state == "released") {
+            prefix = this.config.releasedPrefix;
+        }
+
+        this.elms[button].src = prefix + button + this.config.postfix;
+    }
+
+
+}
+
+class FrettBoard {
+    constructor(container, imageFile) {
+        this.container = container;
+        this.imageFile = imageFile;
+
+        let config = {
+            releasedPrefix: "assets/buttons_released",
+            pressedPrefix: "assets/buttons_pressed",
+            pluckedPrefix: "assets/buttons_plucked",
+            postfix: ".png"
+        }
+
+        this.buttons = new FretButtons(container, config);
+        this.listener = new window.keypress.Listener();
+        this.initKeyListeners();
+
+        this.initDepthOcclusion();
+
+        setTimeout(()=>{this.spawnMore()},1);
+    }
+
+    initDepthOcclusion () {
+        let d1 = document.createElement("div");
+        d1.id = "topBlur";
+        this.container.appendChild(d1);
+
+        let d2 = document.createElement("div");
+        d2.id = "topBlock";
+        this.container.appendChild(d2);
+    }
+
+    initKeyListeners() {
+        let my_scope = this;
+        this.listener.register_many([
+            {
+                "keys": "a",
+                "on_keydown": function() {
+                    this.buttons.changeState(0, "pressed");
+                },
+                "on_keyup": function(e) {
+                    this.buttons.changeState(0, "released");
+                },
+                "this": my_scope
+            },
+            {
+                "keys": "s",
+                "on_keydown": function() {
+                    this.buttons.changeState(1, "pressed");
+                },
+                "on_keyup": function(e) {
+                    this.buttons.changeState(1, "released");
+                },
+                "this": my_scope
+            },
+            {
+                "keys": "d",
+                "on_keydown": function() {
+                    this.buttons.changeState(2, "pressed");
+                },
+                "on_keyup": function(e) {
+                    this.buttons.changeState(2, "released");
+                },
+                "this": my_scope
+            },
+            {
+                "keys": "f",
+                "on_keydown": function() {
+                    this.buttons.changeState(3, "pressed");
+                },
+                "on_keyup": function(e) {
+                    this.buttons.changeState(3, "released");
+                },
+                "this": my_scope
+            },
+            {
+                "keys": "g",
+                "on_keydown": function() {
+                    this.buttons.changeState(4, "pressed");
+                },
+                "on_keyup": function(e) {
+                    this.buttons.changeState(4, "released");
+                },
+                "this": my_scope
+            },
+        ]);
+    }
+
+    spawnMore() {
+        let f1 = new Frett(this.container, this.imageFile);
+        f1.animate(()=>{this.spawnMore()});
+    }
+}
+
+window.onload = function() {
+    let elm = document.getElementById('pent');
+    let fb = new FrettBoard(elm, "assets/neckElm.png");
+}
+</script>
+
+<div id="pent"></div>
+</body>
+</html>
