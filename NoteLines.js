@@ -23,24 +23,22 @@ class NoteLines {
     }
 
     _colorize(button, elm) {
-        if (button == 0) {
-            elm.className += " green";
-        }
-
-        if (button == 1) {
-            elm.className += " red";
-        }
-
-        if (button == 2) {
-            elm.className += " yellow";
-        }
-
-        if (button == 3) {
-            elm.className += " blue";
-        }
-
-        if (button == 4) {
-            elm.className += " orange";
+        switch (button) {
+            case 0:
+                elm.className += " green";
+                break;
+            case 1:
+                elm.className += " red";
+                break;
+            case 2:
+                elm.className += " yellow";
+                break;
+            case 3:
+                elm.className += " blue";
+                break;
+            case 4:
+                elm.className += " orange";
+                break;
         }
     }
 

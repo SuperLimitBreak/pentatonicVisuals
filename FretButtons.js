@@ -26,13 +26,13 @@ class FretButtons {
 
         if (state == "pressed") {
             prefix = this.config.pressedPrefix;
-            let temp = new NoteLines(button, this.container);
-            this.lines[button].push(temp);
-            this.animationManager.add(temp);
         }
 
         if (state == "plucked") {
             prefix = this.config.pluckedPrefix;
+            let temp = new NoteLines(button, this.container);
+            this.lines[button].push(temp);
+            this.animationManager.add(temp);
         }
 
         if (state == "released") {
