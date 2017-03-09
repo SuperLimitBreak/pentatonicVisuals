@@ -5,21 +5,25 @@ class NoteLines {
 
         let n = document.createElement("div");
         n.className += "note";
+
         this._colorize(button, n);
+        this._setLeft(button, container, n)
 
-        let l = 0.157*container.clientWidth;
-        l += button * (container.clientWidth * 0.165);
-        n.style.left = l + "px";
-
+        this.maxHeight = container.clientHeight;
         this.height = n.clientHeight;
         n.style.height = this.height;
-        this.maxHeight = container.clientHeight;
 
         this.bottom = (this.maxHeight)*0.254;
         n.style.bottom = this.bottom + "px";
 
         container.appendChild(n);
         this.elm = n;
+    }
+
+    _setLeft(button, container, elm) {
+        let l = 0.157*container.clientWidth;
+        l += button * (container.clientWidth * 0.165);
+        elm.style.left = l + "px";
     }
 
     _colorize(button, elm) {
@@ -46,29 +50,44 @@ class NoteLines {
         this.down = false;
     }
 
-    drawFrame() {
-        if (this.down) {
-            if (this.height < this.maxHeight) {
-                this.height += 5;
-                this.elm.style.height = this.height + "px";
-            } else {
-                this.reachedTop = true;
-            }
+    _grow() {
+        if (this.height < this.maxHeight) {
+            this.height += 5;
+            this.elm.style.height = this.height + "px";
         } else {
-            if (this.bottom > this.maxHeight) {
-                this.elm.parentNode.removeChild(this.elm);
-                delete this.elm;
+            this.reachedTop = true;
+        }
+    }
+
+    _isDone() {
+        if (this.bottom > this.maxHeight) {
+            this.elm.parentNode.removeChild(this.elm);
+            delete this.elm;
+            return true;
+        }
+        return false;
+    }
+
+    _shrink() {
+        // if the bar has reached the top we need to shrink it
+        if (this.reachedTop || (this.bottom+this.height > this.maxHeight+(this.maxHeight*0.254))) {
+            this.height -= 5;
+            this.elm.style.height = this.height + "px";
+        }
+    }
+
+    drawFrame() {
+        //console.log("called");
+        if (this.down) {
+            this._grow();
+        } else {
+            if (this._isDone()) {
                 return false; // finished animating
             }
 
             this.bottom += 5;
             this.elm.style.bottom = this.bottom + "px";
-
-            // if the bar has reached the top we need to shrink it
-            if (this.reachedTop || (this.bottom+this.height > this.maxHeight+(this.maxHeight*0.254))) {
-                this.height -= 5;
-                this.elm.style.height = this.height + "px";
-            }
+            this._shrink();
         }
         return true; // more frames to come
     }

@@ -9,7 +9,8 @@ class AnimationManager {
         this.running = true;
 
         let newLive = [];
-        for (let i=0; i<this.live.length; i++) {
+        let length = this.live.length;
+        for (let i=0; i<length; i++) {
             let obj = this.live.shift();
 
             // Run the frame and re queue it if it returns true
@@ -18,7 +19,8 @@ class AnimationManager {
             }
         }
 
-        for (let i=0; i<this.waiting.length; i++) {
+        length = this.waiting.length;
+        for (let i=0; i<length; i++) {
             newLive.push(this.waiting.shift());
         }
 
