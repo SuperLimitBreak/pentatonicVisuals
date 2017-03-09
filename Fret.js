@@ -1,6 +1,7 @@
 class Fret {
-    constructor(container, imageFile) {
+    constructor(container, imageFile, onNextNeeded) {
         this.spawned = false;
+        this.callback = onNextNeeded;
 
         let img = document.createElement('img');
         img.src = imageFile;
@@ -14,22 +15,22 @@ class Fret {
         container.appendChild(this.elm);
     }
 
-    animate(callback) {
+    drawFrame() {
         let height = this.elm.clientHeight;
 
         if (this.offset < 0-height) {
             this.destroy();
-            return;
+            return false;
         }
 
         if ((!this.spawned) && this.offset < this.start-(height*0.8)) {
             this.spawned = true;
-            callback();
+            this.callback();
         }
 
         this.offset -= 5;
         this.elm.style.top = this.offset + "px";
-        window.requestAnimationFrame(()=>{this.animate(callback)});
+        return true;
     }
 
     destroy() {

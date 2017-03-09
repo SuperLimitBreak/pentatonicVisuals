@@ -3,9 +3,15 @@ class AnimationManager {
         this.live = [];
         this.waiting = [];
         this.running = false;
+        this.lastTimestamp = null;
     }
 
-    animate() {
+    animate(highResTimeStamp) {
+        let multiplier = 1;
+        if (this.lastTimestamp != null){
+            (highResTimeStamp - this.lastTimestamp) / (1/60);
+        }
+
         this.running = true;
 
         let newLive = [];
@@ -14,7 +20,7 @@ class AnimationManager {
             let obj = this.live.shift();
 
             // Run the frame and re queue it if it returns true
-            if (obj.drawFrame()) {
+            if (obj.drawFrame(multiplier)) {
                 newLive.push(obj);
             }
         }
@@ -31,8 +37,8 @@ class AnimationManager {
             return;
         }
 
-        window.requestAnimationFrame(()=>{
-            this.animate();
+        window.requestAnimationFrame((ts)=>{
+            this.animate(ts);
         });
     }
 
@@ -40,8 +46,8 @@ class AnimationManager {
         this.waiting.push(obj);
 
         if (!this.running) {
-            window.requestAnimationFrame(()=>{
-                this.animate();
+            window.requestAnimationFrame((ts)=>{
+                this.animate(ts);
             });
         }
     }

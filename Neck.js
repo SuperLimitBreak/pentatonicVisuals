@@ -20,7 +20,12 @@ class Neck {
     }
 
     spawnMore() {
-        let f1 = new Fret(this.container, this.imageFile);
-        f1.animate(()=>{this.spawnMore()});
+        let f = new Fret(
+            this.container,
+            this.imageFile,
+            ()=>{this.spawnMore()}
+        );
+
+        this.am.add(f);
     }
 }
