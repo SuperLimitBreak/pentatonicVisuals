@@ -47,9 +47,19 @@ body {
     background-color: black;
 }
 
+@keyframes fromwhite {
+    0% {
+        background-color: #fff;
+        border-color: #fff;
+        box-shadow: 0 0 65px 35px #fff;
+        border-width: 1px;
+    }
+    100% {}
+}
+
 .note {
+    animation: fromwhite 0.4s;
     width: 1%;
-    /*left: 15.6%;*/
     position: absolute;
     height: 0%;
     z-index: 2;
@@ -81,7 +91,7 @@ body {
 .note.blue {
     background-color: #acf;
     border-color: #3af;
-    box-shadow: 0 0 50px 5px #18f;
+    box-shadow: 0 0 50px 6px #18f;
 }
 
 .note.orange {
@@ -91,7 +101,7 @@ body {
 }
 
 
-@keyframes fadein {
+@keyframes flyfadein {
     0% { opacity: 0; top: 0%;}
     40% { opacity: 0.5; top: 72.5%;}
     50% { opacity: 0.5; top: 72.5%;}
@@ -105,5 +115,5 @@ body {
     top: 72.5%;
     position: absolute;
     z-index: 3;
-    animation: fadein 2.5s;
+    animation: flyfadein 2.5s;
 }

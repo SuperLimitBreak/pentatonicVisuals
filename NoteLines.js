@@ -1,20 +1,18 @@
 class NoteLines {
-    constructor(button, container) {
+    constructor(button, container, speed) {
         this.down = true;
         this.reachedTop = false;
+        this.speed = speed;
+        this.height = 1;
+        this.maxHeight = container.clientHeight;
+        this.bottom = (this.maxHeight)*0.254;
 
         let n = document.createElement("div");
         n.className += "note";
+        n.style.bottom = this.bottom + "px";
 
         this._colorize(button, n);
         this._setLeft(button, container, n)
-
-        this.maxHeight = container.clientHeight;
-        this.height = n.clientHeight;
-        n.style.height = this.height;
-
-        this.bottom = (this.maxHeight)*0.254;
-        n.style.bottom = this.bottom + "px";
 
         container.appendChild(n);
         this.elm = n;
@@ -52,7 +50,7 @@ class NoteLines {
 
     _grow(mult) {
         if (this.height < this.maxHeight) {
-            this.height += (5*mult);
+            this.height += (this.speed*mult);
             this.elm.style.height = this.height + "px";
         } else {
             this.reachedTop = true;
@@ -71,7 +69,7 @@ class NoteLines {
     _shrink(mult) {
         // if the bar has reached the top we need to shrink it
         if (this.reachedTop || (this.bottom+this.height > this.maxHeight+(this.maxHeight*0.254))) {
-            this.height -= (mult*5);
+            this.height -= (this.speed*mult);
             this.elm.style.height = this.height + "px";
         }
     }
@@ -84,8 +82,11 @@ class NoteLines {
                 return false; // finished animating
             }
 
-            this.bottom += (5*mult);
+            // Move up the screen
+            this.bottom += (this.speed*mult);
             this.elm.style.bottom = this.bottom + "px";
+
+            // Prevent bar escapinf occlusion zone
             this._shrink(mult);
         }
         return true; // more frames to come

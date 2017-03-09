@@ -2,6 +2,7 @@ class Visualizer {
     constructor(container, imageFile) {
         this.container = container;
         this.imageFile = imageFile;
+        this.speed = container.clientHeight * 0.008;
         this.am = new AnimationManager();
 
         let config = {
@@ -11,11 +12,11 @@ class Visualizer {
             postfix: ".png"
         }
 
-        this.buttons = new FretButtons(container, config, this.am);
+        this.buttons = new FretButtons(container, config, this.speed, this.am);
         this.listener = new window.keypress.Listener();
         this._initKeyListeners();
 
-        let n = new Neck(container, imageFile, this.am);
+        let n = new Neck(container, imageFile, this.speed, this.am);
     }
 
     changeState(buttonNo, state) {

@@ -1,23 +1,29 @@
 class FretButtons {
-    constructor(container, config, animationManager) {
+    constructor(container, config, speed, animationManager) {
         this.container = container;
         this.config = config;
+        this.speed = speed;
         this.animationManager = animationManager;
 
-        let offset = container.clientWidth * 0.085;
-        let pos = offset;
         this.elms = [];
         this.lines = [[],[],[],[],[]];
 
+        this._initButtons();
+    }
+
+    _initButtons() {
+        let offset = this.container.clientWidth * 0.085;
+        let pos = offset;
+
         for (let i=0; i<5; i++) {
             let img = document.createElement('img');
-            img.src = config.releasedPrefix+ i +config.postfix;
+            img.src = this.config.releasedPrefix + i + this.config.postfix;
             img.className += "fretButton";
             img.style.left = pos + "px";
             pos += (offset*1.94);
 
-            container.appendChild(img);
-            this.elms.push(img)
+            this.container.appendChild(img);
+            this.elms.push(img);
         }
     }
 
@@ -30,7 +36,7 @@ class FretButtons {
 
         if (state == "plucked") {
             prefix = this.config.pluckedPrefix;
-            let temp = new NoteLines(button, this.container);
+            let temp = new NoteLines(button, this.container, this.speed);
             this.lines[button].push(temp);
             this.animationManager.add(temp);
         }
