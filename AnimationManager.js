@@ -9,8 +9,12 @@ class AnimationManager {
     animate(highResTimeStamp) {
         let multiplier = 1;
         if (this.lastTimestamp != null){
-            (highResTimeStamp - this.lastTimestamp) / (1/60);
+            multiplier = Math.round(
+                (highResTimeStamp - this.lastTimestamp) /
+                (1000/60)
+            );
         }
+        this.lastTimestamp = highResTimeStamp;
 
         this.running = true;
 

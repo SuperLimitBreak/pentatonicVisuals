@@ -15,7 +15,7 @@ class Fret {
         container.appendChild(this.elm);
     }
 
-    drawFrame() {
+    drawFrame(mult) {
         let height = this.elm.clientHeight;
 
         if (this.offset < 0-height) {
@@ -23,12 +23,12 @@ class Fret {
             return false;
         }
 
+        this.offset -= (5*mult);
         if ((!this.spawned) && this.offset < this.start-(height*0.8)) {
             this.spawned = true;
             this.callback();
         }
 
-        this.offset -= 5;
         this.elm.style.top = this.offset + "px";
         return true;
     }

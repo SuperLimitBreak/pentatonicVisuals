@@ -50,9 +50,9 @@ class NoteLines {
         this.down = false;
     }
 
-    _grow() {
+    _grow(mult) {
         if (this.height < this.maxHeight) {
-            this.height += 5;
+            this.height += (5*mult);
             this.elm.style.height = this.height + "px";
         } else {
             this.reachedTop = true;
@@ -68,26 +68,25 @@ class NoteLines {
         return false;
     }
 
-    _shrink() {
+    _shrink(mult) {
         // if the bar has reached the top we need to shrink it
         if (this.reachedTop || (this.bottom+this.height > this.maxHeight+(this.maxHeight*0.254))) {
-            this.height -= 5;
+            this.height -= (mult*5);
             this.elm.style.height = this.height + "px";
         }
     }
 
-    drawFrame() {
-        //console.log("called");
+    drawFrame(mult) {
         if (this.down) {
-            this._grow();
+            this._grow(mult);
         } else {
             if (this._isDone()) {
                 return false; // finished animating
             }
 
-            this.bottom += 5;
+            this.bottom += (5*mult);
             this.elm.style.bottom = this.bottom + "px";
-            this._shrink();
+            this._shrink(mult);
         }
         return true; // more frames to come
     }
