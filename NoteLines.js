@@ -5,7 +5,7 @@ class NoteLines {
         this.speed = speed;
         this.height = 1;
         this.maxHeight = container.clientHeight;
-        this.bottom = (this.maxHeight)*0.254;
+        this.bottom = (this.maxHeight)*0.025;
 
         let n = document.createElement("div");
         n.className += "note";

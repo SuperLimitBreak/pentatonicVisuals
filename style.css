@@ -12,12 +12,7 @@ body {
     left: 40%;
     width: 20%;
     height: 100%;
-    transform: matrix3d(
-        1,0,0,0,
-        0,1,0,-0.0025,
-        0,0,1,0,
-        0,0,0,1
-    );
+    transform-origin: 0 0;
 }
 
 .fret {
@@ -103,16 +98,16 @@ body {
 
 @keyframes flyfadein {
     0% { opacity: 0; top: 0%;}
-    40% { opacity: 0.5; top: 72.5%;}
-    50% { opacity: 0.5; top: 72.5%;}
-    55% { opacity: 0.7; top: 75%;}
-    60% { opacity: 1; top: 72.5%;}
-    100% { opacity: 1; top: 72.5%;}
+    40% { opacity: 0.5; top: 95%;}
+    50% { opacity: 0.5; top: 95%;}
+    55% { opacity: 0.7; top: 97.5%;}
+    60% { opacity: 1; top: 95%;}
+    100% { opacity: 1; top: 95%;}
 }
 
 .fretButton {
     width: 17%;
-    top: 72.5%;
+    top: 95%;
     position: absolute;
     z-index: 3;
     animation: flyfadein 2.5s;

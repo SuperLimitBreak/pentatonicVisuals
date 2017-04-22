@@ -3,6 +3,7 @@ class Visualizer {
         this.container = container;
         this.imageFile = imageFile;
         this.speed = container.clientHeight * 0.008;
+
         this.am = new AnimationManager();
 
         let config = {
