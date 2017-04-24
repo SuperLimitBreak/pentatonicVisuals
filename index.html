@@ -12,6 +12,7 @@
 <script src="Neck.js"></script>
 <script src="Fret.js"></script>
 <script src="FretButtons.js"></script>
+<script src="Controller.js"></script>
 <script src="perspectiveHelpers.js"></script>
 
 <link rel="stylesheet" type="text/css" href="style.css">
@@ -23,6 +24,8 @@ window.onload = function() {
     let elm = document.getElementById('pent');
     let fb = new Visualizer(elm, "assets/neckElm.png");
     calculateBackTilt(elm);
+
+    let ctrl = new Controller(0, fb.buttons);
 }
 </script>
 

@@ -43,7 +43,10 @@ class FretButtons {
 
         if (state == "released") {
             prefix = this.config.releasedPrefix;
-            this.lines[button].shift().stop();
+            let ln = this.lines[button].shift();
+            if (ln != null) {
+                ln.stop();
+            }
         }
 
         this.elms[button].src = prefix + button + this.config.postfix;
