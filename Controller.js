@@ -10,6 +10,23 @@ class StateManager {
         this.orange = false;
     }
 
+    _buttonByNumber(i) {
+        switch(i) {
+            case 0:
+                return this.green;
+            case 1:
+                return this.red;
+            case 2:
+                return this.yellow;
+            case 3:
+                return this.blue;
+            case 4:
+                return this.orange;
+            default:
+                return null;
+        }
+    }
+
     _anyPressed() {
         return this.green || this.red || this.yellow || this.blue || this.orange;
     }
@@ -35,13 +52,11 @@ class StateManager {
         this._setButtonState(events);
 
         if(events.includes("pluck")) {
-            this.pluckedString = this._highestPressed();
-
-            for(let i=0; i<5; i++) {
-                this.buttons.changeState(i, "released");
+            if (this.pluckedString != -1) {
+                this.buttons.changeState(this.pluckedString, "released");
             }
-            this._setButtonState(events);
 
+            this.pluckedString = this._highestPressed();
             if (this.pluckedString != -1) {
                 this.buttons.changeState(this.pluckedString, "plucked");
             }
@@ -50,8 +65,11 @@ class StateManager {
         if(this.pluckedString != -1) {
             if (this._highestPressed() != this.pluckedString) {
                 this.buttons.changeState(this.pluckedString, "released");
+                if (this._buttonByNumber(this.pluckedString)) {
+                    this.buttons.changeState(this.pluckedString, "pressed");
+                }
+
                 this.pluckedString = -1;
-                this._setButtonState(events);
 
                 if (this._anyPressed()) {
                     this.pluckedString = this._highestPressed();
